@@ -1,14 +1,16 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './hooks/useAuth';
-import Login from './components/Login';
-import ProductList from './components/ProductList';
-import Dashboard from './components/Dashboard';
-import AddProduct from './components/AddProduct';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
+import Login from "./components/Login";
+import ProductList from "./components/ProductList";
+import Dashboard from "./components/Dashboard";
+import AddProduct from "./components/AddProduct";
+import DeleteProduct from "./components/DeleteProduct";
+import UpdateProduct from "./components/UpdateProduct";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) return <div>Loading...</div>;
   return user ? <>{children}</> : <Navigate to="/login" />;
 };
@@ -20,11 +22,17 @@ const AppContent: React.FC = () => {
     <BrowserRouter>
       <div>
         {user && (
-          <nav style={{ padding: '1rem', borderBottom: '1px solid #ddd', marginBottom: '1rem' }}>
+          <nav
+            style={{
+              padding: "1rem",
+              borderBottom: "1px solid #ddd",
+              marginBottom: "1rem",
+            }}
+          >
             <span>Welcome, {user.email}</span>
-            <button 
+            <button
               onClick={logout}
-              style={{ marginLeft: '1rem', padding: '0.5rem 1rem' }}
+              style={{ marginLeft: "1rem", padding: "0.5rem 1rem" }}
             >
               Logout
             </button>
@@ -53,6 +61,22 @@ const AppContent: React.FC = () => {
             element={
               <ProtectedRoute>
                 <AddProduct />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products/delete"
+            element={
+              <ProtectedRoute>
+                <DeleteProduct />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/products/update"
+            element={
+              <ProtectedRoute>
+                <UpdateProduct />
               </ProtectedRoute>
             }
           />
