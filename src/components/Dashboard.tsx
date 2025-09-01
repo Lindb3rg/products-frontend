@@ -27,12 +27,12 @@ const Dashboard: React.FC = () => {
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e9ecef'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
         >
-          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>📋 List Products</div>
-          <div style={{ fontSize: '0.9rem', color: '#666' }}>View all products</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>📦 Products</div>
+          <div style={{ fontSize: '0.9rem', color: '#666' }}>Manage Inventory Products</div>
         </button>
 
         <button
-          onClick={() => navigate('/products/add')}
+          onClick={() => navigate('/orders')}
           style={{
             padding: '1.5rem',
             fontSize: '1rem',
@@ -45,45 +45,11 @@ const Dashboard: React.FC = () => {
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e9ecef'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
         >
-          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>➕ Add Product</div>
-          <div style={{ fontSize: '0.9rem', color: '#666' }}>Create new product</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>📋 Orders</div>
+          <div style={{ fontSize: '0.9rem', color: '#666' }}>Manage Product Orders</div>
         </button>
 
-        <button
-          onClick={() => navigate('/products/delete')}
-          style={{
-            padding: '1.5rem',
-            fontSize: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            backgroundColor: '#f8f9fa',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e9ecef'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-        >
-          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>🗑️ Delete Product</div>
-          <div style={{ fontSize: '0.9rem', color: '#666' }}>Remove products</div>
-        </button>
 
-        <button
-          onClick={() => navigate('/products/update')}
-          style={{
-            padding: '1.5rem',
-            fontSize: '1rem',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            backgroundColor: '#f8f9fa',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e9ecef'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-        >
-          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>✏️ Update Product</div>
-          <div style={{ fontSize: '0.9rem', color: '#666' }}>Edit existing products</div>
-        </button>
       </div>
     </div>
   );

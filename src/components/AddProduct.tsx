@@ -2,6 +2,11 @@ import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
+
+interface AddProductProps {
+  onSuccess?: () => void;
+}
+
 interface ProductFormData {
   name: string;
   category: string;
@@ -9,7 +14,9 @@ interface ProductFormData {
   stock_quantity: number;
 }
 
-const AddProduct: React.FC = () => {
+
+
+const AddProduct: React.FC<AddProductProps> = ({ onSuccess }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
@@ -75,17 +82,24 @@ const AddProduct: React.FC = () => {
       setError('');
       
       await api.post('/products/', formData);
-      navigate('/');
-    } catch (err: any) {
-      if (err.response?.status === 409) {
-        setError('Product with this name already exists');
+      
+      if (onSuccess) {
+        onSuccess(); // Switch to list view in ProductManager
       } else {
-        setError('Failed to create product. Please try again.');
+        navigate('/products'); // Fallback for standalone usage
       }
-    } finally {
-      setLoading(false);
-    }
+      } catch (err: any) {
+        if (err.response?.status === 409) {
+          setError('Product with this name already exists');
+        } else {
+          setError('Failed to create product. Please try again.');
+        }
+      }finally {
+        setLoading(false);
+      }
+       
   };
+  
 
   return (
     <div style={{ padding: '2rem', maxWidth: '500px', margin: '0 auto' }}>

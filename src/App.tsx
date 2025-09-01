@@ -7,6 +7,8 @@ import Dashboard from "./components/Dashboard";
 import AddProduct from "./components/AddProduct";
 import DeleteProduct from "./components/DeleteProduct";
 import UpdateProduct from "./components/UpdateProduct";
+import ProductManager from "./components/ProductManager";
+import OrderManager from "./components/OrderManager";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -39,7 +41,7 @@ const AppContent: React.FC = () => {
           </nav>
         )}
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />}></Route>
           <Route
             path="/"
             element={
@@ -49,34 +51,18 @@ const AppContent: React.FC = () => {
             }
           />
           <Route
-            path="/products"
+            path="/products/*"
             element={
               <ProtectedRoute>
-                <ProductList />
+                <ProductManager />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/products/add"
+            path="/orders/*"
             element={
               <ProtectedRoute>
-                <AddProduct />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/products/delete"
-            element={
-              <ProtectedRoute>
-                <DeleteProduct />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/products/update"
-            element={
-              <ProtectedRoute>
-                <UpdateProduct />
+                <OrderManager />
               </ProtectedRoute>
             }
           />

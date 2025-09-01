@@ -37,7 +37,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     localStorage.setItem('token', token);
     
-    // Get user info from AUTH service, not main backend
     const userResponse = await authApi.get<User>('/users/me', {
       headers: { Authorization: `Bearer ${token}` }
     });
