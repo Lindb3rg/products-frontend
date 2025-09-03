@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Order } from '../types';
+import { Order, Product } from '../types';
 import { api } from '../services/api';
+import { getProductName } from '../utils/productUtils';
 
 const DeleteOrder: React.FC = () => {
   const navigate = useNavigate();
@@ -10,9 +11,11 @@ const DeleteOrder: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]); 
 
   useEffect(() => {
     fetchOrders();
+    fetchProducts();
   }, []);
 
   const fetchOrders = async () => {
@@ -21,6 +24,15 @@ const DeleteOrder: React.FC = () => {
       setOrders(response.data);
     } catch (err) {
       setError('Failed to load orders');
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await api.get<Product[]>('/products/');
+      setProducts(response.data);
+    } catch (err) {
+      setError('Failed to load products');
     }
   };
 
@@ -51,6 +63,7 @@ const DeleteOrder: React.FC = () => {
       setLoading(false);
     }
   };
+
 
   const cancelDelete = () => {
     setSelectedOrder(null);
@@ -113,10 +126,26 @@ const DeleteOrder: React.FC = () => {
                     <h4 style={{ margin: '0 0 0.5rem 0' }}>{order.customer_name}</h4>
                     <h4 style={{ margin: '0 0 0.5rem 0' }}>{order.customer_email}</h4>
                     <p style={{ margin: 0, color: '#666' }}>
-                      Order ID: ${order.id.toFixed(2)} | Order Batch ID: {order.order_batch_id} |
-                      Total amount: ${order.total_amount.toFixed(2)} | Status: {order.status}
-                      Order Details: ${order.order_details}
+                      Order ID: {order.id.toFixed(2)} | Order Batch ID: {order.order_batch_id} |
+                      Total amount: {order.total_amount.toFixed(2)} | Status: {order.status}
                       
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <strong>Order Details:</strong>
+                        <ul style={{ margin: '0.25rem 0', paddingLeft: '1.5rem' }}>
+                          {order.order_details.map((detail, index) => (
+                            <li key={index} style={{ fontSize: '0.9rem', color: '#666' }}>
+
+                              <li>Product ID: {detail.product_id}</li>
+                              <li>Product Name: {getProductName(detail.product_id,products)}</li>
+                              <li>Qty: {detail.quantity}</li>
+                              <li>Price {detail.unit_price}</li>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+
+
                     </p>
                   </div>
                   <div style={{ color: '#dc3545', fontWeight: 'bold' }}>

@@ -31,18 +31,22 @@ export interface User {
     total_amount: number;
     order_batch_id: number;
     order_date: string;
-    order_details: [];
+    order_details: OrderDetail[];
   }
   
-  export interface OrderItem {
+  export interface OrderDetail {
     product_id: number;
+    order_id: number;
     quantity: number;
+    unit_price: number;
+    subtotal: number;
+
   }
   
   export interface OrderCreate {
     customer_name: string;
     customer_email: string;
-    items: OrderItem[];
+    items: OrderDetail[];
   }
   
   export interface OrderBatchCreate {

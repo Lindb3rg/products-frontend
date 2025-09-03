@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Product, OrderItem } from '../types';
+import { Product, OrderDetail as OrderDetail } from '../types';
 import { api } from '../services/api';
+import { getProductName,getAvailableStock } from '../utils/productUtils';
+
 
 interface OrderFormData {
   customer_name: string;
   customer_email: string;
-  items: OrderItem[];
+  items: OrderDetail[];
 }
 
 interface AddOrderProps {
@@ -45,21 +47,28 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
     }));
   };
 
-  const addOrderItem = () => {
+  const addOrderDetail = () => {
     setFormData(prev => ({
       ...prev,
-      items: [...prev.items, { product_id: 0, quantity: 1 }]
+      items: [...prev.items, 
+        { product_id: 0,
+          order_id: 1,
+          quantity: 2,
+          unit_price: 3,
+          subtotal: 4}]
     }));
   };
 
-  const removeOrderItem = (index: number) => {
+  
+
+  const removeOrderDetail = (index: number) => {
     setFormData(prev => ({
       ...prev,
       items: prev.items.filter((_, i) => i !== index)
     }));
   };
 
-  const updateOrderItem = (index: number, field: keyof OrderItem, value: number) => {
+  const updateOrderDetail = (index: number, field: keyof OrderDetail, value: number) => {
     setFormData(prev => ({
       ...prev,
       items: prev.items.map((item, i) => 
@@ -113,7 +122,6 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
       };
       
       await api.post('/orders/', orderBatch);
-      console.log(orderBatch.order_list)
 
       if (onSuccess) {
         onSuccess(); 
@@ -134,15 +142,8 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
     }
   };
 
-  const getProductName = (productId: number) => {
-    const product = products.find(p => p.id === productId);
-    return product ? product.name : 'Unknown Product';
-  };
 
-  const getAvailableStock = (productId: number) => {
-    const product = products.find(p => p.id === productId);
-    return product ? product.stock_quantity : 0;
-  };
+  
 
   return (
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
@@ -194,7 +195,7 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
             <label>Order Items *</label>
             <button
               type="button"
-              onClick={addOrderItem}
+              onClick={addOrderDetail}
               style={{
                 padding: '0.5rem 1rem',
                 backgroundColor: '#28a745',
@@ -220,7 +221,7 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
                   <label>Product</label>
                   <select
                     value={item.product_id}
-                    onChange={(e) => updateOrderItem(index, 'product_id', parseInt(e.target.value))}
+                    onChange={(e) => updateOrderDetail(index, 'product_id', parseInt(e.target.value))}
                     style={{
                       width: '100%',
                       padding: '0.5rem',
@@ -242,9 +243,9 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
                   <input
                     type="number"
                     min="1"
-                    max={getAvailableStock(item.product_id)}
+                    max={getAvailableStock(item.product_id, products)}
                     value={item.quantity}
-                    onChange={(e) => updateOrderItem(index, 'quantity', parseInt(e.target.value) || 1)}
+                    onChange={(e) => updateOrderDetail(index, 'quantity', parseInt(e.target.value) || 1)}
                     style={{
                       width: '100%',
                       padding: '0.5rem',
@@ -256,7 +257,7 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
                 
                 <button
                   type="button"
-                  onClick={() => removeOrderItem(index)}
+                  onClick={() => removeOrderDetail(index)}
                   style={{
                     padding: '0.5rem',
                     backgroundColor: '#dc3545',
@@ -278,7 +279,7 @@ const AddOrder: React.FC<AddOrderProps> = ({onSuccess}) => {
             <h4>Order Summary</h4>
             {formData.items.map((item, index) => (
               <div key={index} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>{getProductName(item.product_id)} x {item.quantity}</span>
+                <span>{getProductName(item.product_id,products)} x {item.quantity}</span>
                 <span>${(products.find(p => p.id === item.product_id)?.unit_price || 0) * item.quantity}</span>
               </div>
             ))}
