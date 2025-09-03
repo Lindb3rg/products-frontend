@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Order, Product } from "../types";
+import { Order, OrderDetail, Product } from "../types";
 import { api } from "../services/api";
 import { getProductName } from "../utils/productUtils";
 
@@ -12,6 +12,7 @@ const DeleteOrder: React.FC = () => {
   const [error, setError] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [showOrderDetails, setShowOrderDetails] = useState<number | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -68,6 +69,15 @@ const DeleteOrder: React.FC = () => {
     setShowConfirmation(false);
   };
 
+  const toggleOrderDetails = (orderId:number) => {
+    if (showOrderDetails === orderId) {
+
+      setShowOrderDetails(null);
+    } else {
+      setShowOrderDetails(orderId);
+    }
+  };
+
   if (orders.length === 0 && !error) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
@@ -89,6 +99,8 @@ const DeleteOrder: React.FC = () => {
       </div>
     );
   }
+
+  
 
   return (
     <div style={{ padding: "1rem", maxWidth: "1000px", margin: "0 auto" }}>
@@ -119,16 +131,9 @@ const DeleteOrder: React.FC = () => {
                   padding: "1rem",
                   marginBottom: "0.5rem",
                   borderRadius: "4px",
-                  cursor: "pointer",
                   transition: "background-color 0.2s",
                 }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#f8f9fa")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "white")
-                }
-                onClick={() => handleOrderSelect(order)}
+                
               >
                 <div
                   style={{
@@ -144,15 +149,36 @@ const DeleteOrder: React.FC = () => {
                     <h4 style={{ margin: "0 0 0.5rem 0" }}>
                       {order.customer_email}
                     </h4>
-                    <p style={{ margin: 0, color: "#666" }}>
+                    <div style={{ margin: 0, color: "#666" }}>
                       Order ID: {order.id.toFixed(2)} | Order Batch ID:{" "}
                       {order.order_batch_id} | Total amount:{" "}
                       {order.total_amount.toFixed(2)} | Status: {order.status}
-                      <div style={{ marginTop: "0.5rem" }}>
+                      <div style={{ marginTop: "1rem" }}>
+                      <button
+                        onClick={()=>toggleOrderDetails(order.id)}
+                        style={{
+                          padding: "0.5rem 1rem",
+                          backgroundColor: "#007bff",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          
+                        }}
+                      >
+                        {showOrderDetails === order.id ? "Hide Details" : "Show Details"}
+                      </button>
+
+                      {showOrderDetails === order.id && <div
+                      style={{
+                        padding: "0.5rem"}}
+                      
+                      >
+                        
                         <strong>Order Details:</strong>
                         <ul
                           style={{
-                            margin: "0.5rem 0",
+                            margin: "1rem 1",
                             paddingLeft: "0",
                             listStyle: "none",
                           }}
@@ -185,12 +211,30 @@ const DeleteOrder: React.FC = () => {
                             </li>
                           ))}
                         </ul>
+                        </div>}
+
+                        
                       </div>
-                    </p>
+                    </div>
                   </div>
                   <div style={{ color: "#dc3545", fontWeight: "bold" }}>
-                    Delete
+                  <button
+                        onClick={() => handleOrderSelect(order)}
+                        style={{
+                          padding: "0.5rem 1rem",
+                          backgroundColor: "#dc3545",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          
+                        }}
+                      >
+                        Delete
+                      </button>
                   </div>
+
+                  
                 </div>
               </div>
             ))}
