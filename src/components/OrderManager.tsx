@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AddOrder from "./AddOrder";
 import ListOrders from "./ListOrders";
 import DeleteOrder from "./DeleteOrder";
+import UpdateOrder from "./UpdateOrder";
 
 type OrderView = "list" | "add" | "delete" | "update";
 
@@ -20,9 +21,7 @@ const OrderManager: React.FC = () => {
         );
       case "update":
         return (
-          <div style={{ padding: "2rem" }}>
-            Update Order Component - Coming Soon
-          </div>
+          <UpdateOrder/>
         );
       default:
         return <ListOrders />;
